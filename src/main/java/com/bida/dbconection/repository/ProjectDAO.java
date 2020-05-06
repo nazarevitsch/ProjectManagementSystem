@@ -1,12 +1,8 @@
 package com.bida.dbconection.repository;
 
 import com.bida.dbconection.domain.Project;
-import org.postgresql.Driver;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +30,10 @@ public class ProjectDAO {
                 projects.add(new Project(startDate, name, developersAmount));
             }
             connection.closeConnection();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error with find all projects!");
+        }
         return projects;
     }
 }

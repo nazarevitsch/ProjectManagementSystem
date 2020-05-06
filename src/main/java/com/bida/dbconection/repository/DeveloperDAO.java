@@ -2,6 +2,7 @@ package com.bida.dbconection.repository;
 
 import com.bida.dbconection.domain.Developer;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,75 +14,81 @@ public class DeveloperDAO {
     private static final String USERNAME = "postgres";
     private static final String PASSWORD = "Nazar1997";
 
-    private static final String selectJavaDevelopers = "" +
-            "select distinct id_developer, name, age, sex, it_company_id, salary from developer\n" +
-            "join developers_skills ds ON developer.id_developer = ds.developer_id\n" +
+    private static final String selectAllDevelopersByLanguageSkills = "" +
+            "select distinct id_developer, name, age, sex, it_company_id, salary from developers\n" +
+            "join developers_skills ds ON developers.id_developer = ds.developer_id\n" +
             "join skills s ON s.id_skills = ds.skill_id\n" +
-            "where s.programing_language = 'Java'";
+            "where s.programing_language = '%s'";
 
-    private static final String selectMiddleDevelopers = "" +
-            "select distinct id_developer, name, age, sex, it_company_id, salary from developer\n" +
-            "join developers_skills ds ON developer.id_developer = ds.developer_id\n" +
+    private static final String selectAllDevelopersByLevelSkills = "" +
+            "select distinct id_developer, name, age, sex, it_company_id, salary from developers\n" +
+            "join developers_skills ds ON developers.id_developer = ds.developer_id\n" +
             "join skills s ON s.id_skills = ds.skill_id\n" +
-            "where s.level = 'Middle'";
+            "where s.level = '%s'";
 
-    private static final String selectDevelopersByProject = "select distinct * from developer\n" +
-            "join developers_projects dp on developer.id_developer = dp.developer_id\n" +
+    private static final String selectDevelopersByProject = "select distinct * from developers\n" +
+            "join developers_projects dp on developers.id_developer = dp.developer_id\n" +
             "join projects p on dp.project_id = p.id_project\n" +
             "where p.id_project = %s";
 
     private static final String selectDevelopersSalaryByIdProject = "select * from\n" +
             "(select project_id, sum(salary) as cost from developers_projects\n" +
-            "join developer on developer.id_developer = developers_projects.developer_id\n" +
+            "join developers on developers.id_developer = developers_projects.developer_id\n" +
             "group by project_id) as foo where project_id = %s";
 
-    private static final String insertIntoDeveloper = "insert into developer\n" +
+    private static final String insertIntoDeveloper = "insert into developers\n" +
             "(id_developer, name, age, sex, salary, it_company_id)\n" +
             "values (%s, '%s', %s, '%s', %s, %s);";
 
-    private static final String selectAllDeveloper = "select * from developer";
+    private static final String selectAllDeveloper = "select * from developers";
 
-    private static final String deleteDeveloperFromDB = "delete from developer where id_developer = %s";
+    private static final String deleteDeveloperFromDB = "delete from developers where id_developer = %s";
 
-    private static final String updateDeveloper = "update developer\n" +
+    private static final String updateDeveloper = "update developers\n" +
             "set name = '%s', age = %s, sex = '%s', it_company_id = %s, salary = %s\n" +
             "where id_developer = %s";
 
-    public List<Developer> findAllJavaDevelopers() {
+    public List<Developer> findAllDevelopersByProgramingLanguage(String programingLanguage) {
         List<Developer> developers = new ArrayList<Developer>();
         try {
             connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
-            ResultSet resultSet = connection.getStatement().executeQuery(selectJavaDevelopers);
+            ResultSet resultSet = connection.getStatement().executeQuery(String.format(selectAllDevelopersByLanguageSkills, programingLanguage));
             while (resultSet.next()) {
                 Long id = resultSet.getLong("id_developer");
                 String name = resultSet.getString("name");
                 Integer age = resultSet.getInt("age");
                 String sex = resultSet.getString("sex");
                 Long itCompanyId = resultSet.getLong("it_company_id");
-                Integer salary = resultSet.getInt("salary");
+                BigDecimal salary = resultSet.getBigDecimal("salary");
                 developers.add(new Developer(id, name, age, sex, itCompanyId, salary));
             }
             connection.closeConnection();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error with find all developers by programing language!");
+        }
         return developers;
     }
 
-    public List<Developer> findAllMiddleDevelopers() {
+    public List<Developer> findAllDevelopersBySkillsLevel(String levelSkill) {
         List<Developer> developers = new ArrayList<Developer>();
         try {
             connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
-            ResultSet resultSet = connection.getStatement().executeQuery(selectMiddleDevelopers);
+            ResultSet resultSet = connection.getStatement().executeQuery(String.format(selectAllDevelopersByLevelSkills, levelSkill));
             while (resultSet.next()) {
                 Long id = resultSet.getLong("id_developer");
                 String name = resultSet.getString("name");
                 Integer age = resultSet.getInt("age");
                 String sex = resultSet.getString("sex");
                 Long itCompanyId = resultSet.getLong("it_company_id");
-                Integer salary = resultSet.getInt("salary");
+                BigDecimal salary = resultSet.getBigDecimal("salary");
                 developers.add(new Developer(id, name, age, sex, itCompanyId, salary));
             }
             connection.closeConnection();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error with find developers by skills level");
+        }
         return developers;
     }
 
@@ -96,11 +103,14 @@ public class DeveloperDAO {
                 Integer age = resultSet.getInt("age");
                 String sex = resultSet.getString("sex");
                 Long itCompanyId = resultSet.getLong("it_company_id");
-                Integer salary = resultSet.getInt("salary");
+                BigDecimal salary = resultSet.getBigDecimal("salary");
                 developers.add(new Developer(id, name, age, sex, itCompanyId, salary));
             }
             connection.closeConnection();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error with select developers by project ID");
+        }
         return developers;
     }
 
@@ -113,7 +123,10 @@ public class DeveloperDAO {
                 salarySum = resultSet.getInt("cost");
             }
             connection.closeConnection();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error with find salary of developers by project ID");
+        }
         return salarySum;
     }
 
@@ -123,7 +136,10 @@ public class DeveloperDAO {
             connection.getStatement().execute(String.format(insertIntoDeveloper, developer.getId(),
                     developer.getName(), developer.getAge(), developer.getSex(), developer.getSalary(), developer.getItCompanyId()));
             connection.closeConnection();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error with add developer");
+        }
     }
 
     public List<Developer> selectAllDevelopers(){
@@ -137,11 +153,14 @@ public class DeveloperDAO {
                 Integer age = resultSet.getInt("age");
                 String sex = resultSet.getString("sex");
                 Long itCompanyId = resultSet.getLong("it_company_id");
-                Integer salary = resultSet.getInt("salary");
+                BigDecimal salary = resultSet.getBigDecimal("salary");
                 developers.add(new Developer(id, name, age, sex, itCompanyId, salary));
             }
             connection.closeConnection();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error with select all developers");
+        }
         return developers;
     }
 
@@ -150,7 +169,10 @@ public class DeveloperDAO {
             connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
              connection.getStatement().execute(String.format(deleteDeveloperFromDB, developerId));
             connection.closeConnection();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error with delete developer!");
+        }
     }
 
     public void updateDeveloper(Developer developer){
@@ -159,6 +181,9 @@ public class DeveloperDAO {
             connection.getStatement().execute(String.format(updateDeveloper, developer.getName(), developer.getAge(), developer.getSex(),
                     developer.getItCompanyId(), developer.getSalary(), developer.getId()));
             connection.closeConnection();
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error with update developer!");
+        }
     }
 }

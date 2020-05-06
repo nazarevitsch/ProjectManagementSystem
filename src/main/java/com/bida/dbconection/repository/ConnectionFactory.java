@@ -16,7 +16,10 @@ public class ConnectionFactory {
             DriverManager.registerDriver(new Driver());
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             statement = connection.createStatement();
-        } catch (Exception e){}
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Maybe Wrong URL, Password or Username");
+        }
     }
 
     static ConnectionFactory createConnection(String URL, String USERNAME, String PASSWORD){
@@ -26,7 +29,10 @@ public class ConnectionFactory {
     public void closeConnection(){
         try {
             connection.close();
-        } catch (Exception e){}
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Error with Connection Close");
+        }
     }
 
     public Statement getStatement() {

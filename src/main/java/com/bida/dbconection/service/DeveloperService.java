@@ -10,12 +10,12 @@ public class DeveloperService {
 
     private static DeveloperDAO developerDAO = new DeveloperDAO();
 
-    public List<Developer> findAllJavaDevelopers() {
-        return developerDAO.findAllJavaDevelopers();
+    public List<Developer> findAllDevelopersByProgramingLanguage(String programingLanguage) {
+        return developerDAO.findAllDevelopersByProgramingLanguage(programingLanguage);
     }
 
-    public List<Developer> findAllMiddleDevelopers() {
-        return developerDAO.findAllMiddleDevelopers();
+    public List<Developer> findAllDevelopersBySkillLevel(String skillLevel) {
+        return developerDAO.findAllDevelopersBySkillsLevel(skillLevel);
     }
 
     public List<Developer> findAllDevelopersByProjectId(long projectId) {

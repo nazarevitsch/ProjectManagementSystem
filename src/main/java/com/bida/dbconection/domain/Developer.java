@@ -1,20 +1,31 @@
 package com.bida.dbconection.domain;
 
+import java.math.BigDecimal;
+
 public class Developer {
     private long id;
     private String name;
     private int age;
-    private String sex;
+    private Sex sex;
     private long itCompanyId;
-    private int salary;
+    private BigDecimal salary;
 
-    public Developer(long id, String name, int age, String sex, long itCompanyId, int salary) {
+    public Developer(long id, String name, int age, String sex, long itCompanyId, BigDecimal salary) {
         this.id = id;
         this.name = name;
         this.age = age;
-        this.sex = sex;
         this.itCompanyId = itCompanyId;
         this.salary = salary;
+        this.sex = Sex.getSex(sex);
+    }
+
+    public Developer(long id, String name, int age, Sex sex, long itCompanyId, BigDecimal salary) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.itCompanyId = itCompanyId;
+        this.salary = salary;
+        this.sex = sex;
     }
 
     public long getId() {
@@ -41,12 +52,16 @@ public class Developer {
         this.age = age;
     }
 
-    public String getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = Sex.getSex(sex);
     }
 
     public long getItCompanyId() {
@@ -57,11 +72,11 @@ public class Developer {
         this.itCompanyId = itCompanyId;
     }
 
-    public int getSalary() {
+    public BigDecimal getSalary() {
         return salary;
     }
 
-    public void setSalary(int salary) {
+    public void setSalary(BigDecimal salary) {
         this.salary = salary;
     }
 
