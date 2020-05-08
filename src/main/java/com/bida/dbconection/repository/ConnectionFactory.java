@@ -1,6 +1,7 @@
 package com.bida.dbconection.repository;
 
 import org.postgresql.Driver;
+import sun.usagetracker.UsageTrackerClient;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,18 +13,21 @@ public class ConnectionFactory {
     private Statement statement;
 
     private ConnectionFactory(String URL, String USERNAME, String PASSWORD){
+        create(URL, USERNAME, PASSWORD);
+    }
+
+    static ConnectionFactory createConnection(String URL, String USERNAME, String PASSWORD){
+        return new ConnectionFactory(URL, USERNAME, PASSWORD);
+    }
+
+    private void create(String URL, String USERNAME, String PASSWORD){
         try {
             DriverManager.registerDriver(new Driver());
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             statement = connection.createStatement();
         } catch (Exception e){
-            e.printStackTrace();
-            System.out.println("Maybe Wrong URL, Password or Username");
+            System.exit(1);
         }
-    }
-
-    static ConnectionFactory createConnection(String URL, String USERNAME, String PASSWORD){
-        return new ConnectionFactory(URL, USERNAME, PASSWORD);
     }
 
     public void closeConnection(){

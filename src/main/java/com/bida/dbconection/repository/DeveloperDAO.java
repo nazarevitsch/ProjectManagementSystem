@@ -1,6 +1,8 @@
 package com.bida.dbconection.repository;
 
 import com.bida.dbconection.domain.Developer;
+import com.bida.dbconection.domain.ProgramingLanguage;
+import com.bida.dbconection.domain.SkillsLevel;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -10,9 +12,6 @@ import java.util.List;
 public class DeveloperDAO {
 
     private ConnectionFactory connection;
-    private static final String URL = "jdbc:postgresql://localhost:5432/postgres";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "Nazar1997";
 
     private static final String selectAllDevelopersByLanguageSkills = "" +
             "select distinct id_developer, name, age, sex, it_company_id, salary from developers\n" +
@@ -48,11 +47,11 @@ public class DeveloperDAO {
             "set name = '%s', age = %s, sex = '%s', it_company_id = %s, salary = %s\n" +
             "where id_developer = %s";
 
-    public List<Developer> findAllDevelopersByProgramingLanguage(String programingLanguage) {
+    public List<Developer> findAllDevelopersByProgramingLanguage(ProgramingLanguage programingLanguage) {
         List<Developer> developers = new ArrayList<Developer>();
         try {
-            connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
-            ResultSet resultSet = connection.getStatement().executeQuery(String.format(selectAllDevelopersByLanguageSkills, programingLanguage));
+            connection = ConnectionFactory.createConnection(MainDataForDataBaseConnection.URL, MainDataForDataBaseConnection.USERNAME, MainDataForDataBaseConnection.PASSWORD);
+            ResultSet resultSet = connection.getStatement().executeQuery(String.format(selectAllDevelopersByLanguageSkills, programingLanguage.getName()));
             while (resultSet.next()) {
                 Long id = resultSet.getLong("id_developer");
                 String name = resultSet.getString("name");
@@ -70,11 +69,11 @@ public class DeveloperDAO {
         return developers;
     }
 
-    public List<Developer> findAllDevelopersBySkillsLevel(String levelSkill) {
+    public List<Developer> findAllDevelopersBySkillsLevel(SkillsLevel skillsLevel) {
         List<Developer> developers = new ArrayList<Developer>();
         try {
-            connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
-            ResultSet resultSet = connection.getStatement().executeQuery(String.format(selectAllDevelopersByLevelSkills, levelSkill));
+            connection = ConnectionFactory.createConnection(MainDataForDataBaseConnection.URL, MainDataForDataBaseConnection.USERNAME, MainDataForDataBaseConnection.PASSWORD);
+            ResultSet resultSet = connection.getStatement().executeQuery(String.format(selectAllDevelopersByLevelSkills, skillsLevel.name()));
             while (resultSet.next()) {
                 Long id = resultSet.getLong("id_developer");
                 String name = resultSet.getString("name");
@@ -95,7 +94,7 @@ public class DeveloperDAO {
     public List<Developer> findAllDevelopersByProjectId(long projectId) {
         List<Developer> developers = new ArrayList<Developer>();
         try {
-            connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
+            connection = ConnectionFactory.createConnection(MainDataForDataBaseConnection.URL, MainDataForDataBaseConnection.USERNAME, MainDataForDataBaseConnection.PASSWORD);
             ResultSet resultSet = connection.getStatement().executeQuery(String.format(selectDevelopersByProject, projectId));
             while (resultSet.next()) {
                 Long id = resultSet.getLong("id_developer");
@@ -117,7 +116,7 @@ public class DeveloperDAO {
     public Integer findDevelopersSalaryByIdProject(long projectId){
         Integer salarySum = null;
         try {
-            connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
+            connection = ConnectionFactory.createConnection(MainDataForDataBaseConnection.URL, MainDataForDataBaseConnection.USERNAME, MainDataForDataBaseConnection.PASSWORD);
             ResultSet resultSet = connection.getStatement().executeQuery(String.format(selectDevelopersSalaryByIdProject, projectId));
             while (resultSet.next()) {
                 salarySum = resultSet.getInt("cost");
@@ -132,7 +131,7 @@ public class DeveloperDAO {
 
     public void addDeveloper(Developer developer){
         try {
-            connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
+            connection = ConnectionFactory.createConnection(MainDataForDataBaseConnection.URL, MainDataForDataBaseConnection.USERNAME, MainDataForDataBaseConnection.PASSWORD);
             connection.getStatement().execute(String.format(insertIntoDeveloper, developer.getId(),
                     developer.getName(), developer.getAge(), developer.getSex(), developer.getSalary(), developer.getItCompanyId()));
             connection.closeConnection();
@@ -142,10 +141,10 @@ public class DeveloperDAO {
         }
     }
 
-    public List<Developer> selectAllDevelopers(){
+    public List<Developer> findAllDevelopers(){
         List<Developer> developers = new ArrayList<Developer>();
         try {
-            connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
+            connection = ConnectionFactory.createConnection(MainDataForDataBaseConnection.URL, MainDataForDataBaseConnection.USERNAME, MainDataForDataBaseConnection.PASSWORD);
             ResultSet resultSet = connection.getStatement().executeQuery(selectAllDeveloper);
             while (resultSet.next()) {
                 Long id = resultSet.getLong("id_developer");
@@ -166,7 +165,7 @@ public class DeveloperDAO {
 
     public void deleteDeveloper(Long developerId){
         try {
-            connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
+            connection = ConnectionFactory.createConnection(MainDataForDataBaseConnection.URL, MainDataForDataBaseConnection.USERNAME, MainDataForDataBaseConnection.PASSWORD);
              connection.getStatement().execute(String.format(deleteDeveloperFromDB, developerId));
             connection.closeConnection();
         } catch (Exception e) {
@@ -177,7 +176,7 @@ public class DeveloperDAO {
 
     public void updateDeveloper(Developer developer){
         try {
-            connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
+            connection = ConnectionFactory.createConnection(MainDataForDataBaseConnection.URL, MainDataForDataBaseConnection.USERNAME, MainDataForDataBaseConnection.PASSWORD);
             connection.getStatement().execute(String.format(updateDeveloper, developer.getName(), developer.getAge(), developer.getSex(),
                     developer.getItCompanyId(), developer.getSalary(), developer.getId()));
             connection.closeConnection();

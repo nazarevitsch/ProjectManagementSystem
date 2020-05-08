@@ -9,9 +9,6 @@ import java.util.List;
 public class ProjectDAO {
 
     private ConnectionFactory connection;
-    private static final String URL = "jdbc:postgresql://localhost:5432/postgres";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "Nazar1997";
 
     private static final String selectAllProjectStartDateNameAmountDevelopers = "select start_date, name , count(developer_id) as developers_amount from projects p\n" +
             "join developers_projects dp on dp.project_id = p.id_project\n" +
@@ -19,9 +16,8 @@ public class ProjectDAO {
 
     public List<Project> findAllProjects(){
         List<Project> projects = new ArrayList<Project>();
-
         try {
-            connection = ConnectionFactory.createConnection(URL, USERNAME, PASSWORD);
+            connection = ConnectionFactory.createConnection(MainDataForDataBaseConnection.URL, MainDataForDataBaseConnection.USERNAME, MainDataForDataBaseConnection.PASSWORD);
             ResultSet resultSet = connection.getStatement().executeQuery(selectAllProjectStartDateNameAmountDevelopers);
             while (resultSet.next()) {
                 String startDate = resultSet.getString("start_date");
