@@ -6,7 +6,7 @@ public enum Sex {
     public static Sex getSex(String sex) {
         Sex[] s = Sex.values();
         for (int i = 0; i < s.length; i++) {
-            if (sex.equals(s[i].toString())) {
+            if (sex.equals(s[i].name())) {
                 return s[i];
             }
         }
