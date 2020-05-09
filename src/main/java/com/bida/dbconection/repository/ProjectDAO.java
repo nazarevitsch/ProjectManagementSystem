@@ -1,6 +1,8 @@
 package com.bida.dbconection.repository;
 
 import com.bida.dbconection.domain.Project;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -27,8 +29,8 @@ public class ProjectDAO {
             }
             connection.closeConnection();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error with find all projects!");
+            Logger logger = LoggerFactory.getLogger(Project.class);
+            logger.error("ERROR with findAllProjects");
         }
         return projects;
     }

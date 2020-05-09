@@ -3,6 +3,8 @@ package com.bida.dbconection.repository;
 import com.bida.dbconection.domain.Developer;
 import com.bida.dbconection.domain.ProgramingLanguage;
 import com.bida.dbconection.domain.SkillsLevel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -63,8 +65,8 @@ public class DeveloperDAO {
             }
             connection.closeConnection();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error with find all developers by programing language!");
+            Logger logger = LoggerFactory.getLogger(DeveloperDAO.class);
+            logger.error("ERROR with findAllDevelopersByProgramingLanguage");
         }
         return developers;
     }
@@ -85,8 +87,8 @@ public class DeveloperDAO {
             }
             connection.closeConnection();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error with find developers by skills level");
+            Logger logger = LoggerFactory.getLogger(DeveloperDAO.class);
+            logger.error("ERROR with findAllDevelopersBySkillsLevel");
         }
         return developers;
     }
@@ -107,8 +109,8 @@ public class DeveloperDAO {
             }
             connection.closeConnection();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error with select developers by project ID");
+            Logger logger = LoggerFactory.getLogger(DeveloperDAO.class);
+            logger.error("ERROR with findAllDevelopersByProjectId");
         }
         return developers;
     }
@@ -123,8 +125,8 @@ public class DeveloperDAO {
             }
             connection.closeConnection();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error with find salary of developers by project ID");
+            Logger logger = LoggerFactory.getLogger(DeveloperDAO.class);
+            logger.error("ERROR with findDevelopersSalaryByIdProject");
         }
         return salarySum;
     }
@@ -136,8 +138,8 @@ public class DeveloperDAO {
                     developer.getName(), developer.getAge(), developer.getSex(), developer.getSalary(), developer.getItCompanyId()));
             connection.closeConnection();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error with add developer");
+            Logger logger = LoggerFactory.getLogger(DeveloperDAO.class);
+            logger.error("ERROR with addDeveloper");
         }
     }
 
@@ -157,8 +159,8 @@ public class DeveloperDAO {
             }
             connection.closeConnection();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error with select all developers");
+            Logger logger = LoggerFactory.getLogger(DeveloperDAO.class);
+            logger.error("ERROR with findAllDevelopers");
         }
         return developers;
     }
@@ -169,8 +171,8 @@ public class DeveloperDAO {
              connection.getStatement().execute(String.format(deleteDeveloperFromDB, developerId));
             connection.closeConnection();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error with delete developer!");
+            Logger logger = LoggerFactory.getLogger(DeveloperDAO.class);
+            logger.error("ERROR with deleteDeveloper");
         }
     }
 
@@ -181,8 +183,8 @@ public class DeveloperDAO {
                     developer.getItCompanyId(), developer.getSalary(), developer.getId()));
             connection.closeConnection();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error with update developer!");
+            Logger logger = LoggerFactory.getLogger(DeveloperDAO.class);
+            logger.error("ERROR with updateDeveloper");
         }
     }
 }

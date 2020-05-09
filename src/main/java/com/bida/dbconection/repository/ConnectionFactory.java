@@ -1,7 +1,8 @@
 package com.bida.dbconection.repository;
 
 import org.postgresql.Driver;
-import sun.usagetracker.UsageTrackerClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,6 +27,8 @@ public class ConnectionFactory {
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             statement = connection.createStatement();
         } catch (Exception e){
+            Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
+            logger.error("Wrong PASSWORD, USERNAME, or URL");
             System.exit(1);
         }
     }
